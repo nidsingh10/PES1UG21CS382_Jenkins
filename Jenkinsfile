@@ -1,33 +1,32 @@
-pipeline{
-  agent any
-  stages{
-    stage('Build'){
-      steps{
-        sh 'mvn clean install' 
-        echo 'Build Stage Successful'
-      }
-    }
-      stage('Test'){
-        steps{
-          sh 'mvn test' 
-          echo 'Test Stage Successful'
-          post{
-            always{
-              junit 'target/surefire-reports/*.xml'
+pipeline {
+    agent any
+    stages {
+        stage('Clone repository') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/nidsingh10/PES1UG21CS382_Jenkins'
             }
-          }
         }
-      }
-      stage('Deploy'){
-        steps{
-          sh 'mvn deploy' 
-          echo 'Deployment Successful'
+        stage('Install dependencies') {
+            steps {
+                sh 'npm install'
+            }
         }
-      }
+        stage('Build application') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+        stage('Test application') {
+            steps {
+                sh 'npm test'
+            }
+        }
+        stage('Push Docker image') {
+            steps {
+                sh "docker build -t <user>/<image>:$BUILD_NUMBER"
+                sh "docker push <user>/<image>:$BUILD_NUMBER"
+            }
+        }
     }
-    post{
-      failure{
-        echo 'Pipeline failed'
-    }
-  }
 }
