@@ -1,32 +1,35 @@
 pipeline {
     agent any
+
     stages {
-        stage('Clone repository') {
+        stage('Build') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/nidsingh10/PES1UG21CS382_Jenkins'
+                sh 'g++ PES1UG21CS382.cpp -o temp'
+                 build job: 'PES1UG21CS382', wait: false
+                 echo 'Build by CS382 successful'
             }
         }
-        stage('Install dependencies') {
+
+        stage('Test') {
             steps {
-                sh 'npm install'
+                sh 'cat PES1UG21CS382.cpp'
+                echo 'Test by CS382 successful'
             }
         }
-        stage('Build application') {
+
+        stage('Deploy') {
             steps {
-                sh 'npm run build'
+               
+                 echo 'Deploy by CS382 successful'
             }
         }
-        stage('Test application') {
-            steps {
-                sh 'npm test'
-            }
-        }
-        stage('Push Docker image') {
-            steps {
-                sh "docker build -t <user>/<image>:$BUILD_NUMBER"
-                sh "docker push <user>/<image>:$BUILD_NUMBER"
-            }
+    }
+
+    post {
+        failure {
+            
+                echo 'Pipeline Failed'
+          
         }
     }
 }
