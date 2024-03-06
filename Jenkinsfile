@@ -4,15 +4,15 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'g++ PES1UG21CS382.cpp -o temp'
-                 build job: 'PES1UG21CS382', wait: false
+                sh 'g++ PES1UG21CS382-1.cpp -o temp'
+                 build job: 'PES1UG21CS382-1', wait: false
                  echo 'Build by CS382 successful'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'cat PES1UG21CS382.cpp'
+                sh 'cat PES1UG21CS382-1.cpp'
                 echo 'Test by CS382 successful'
             }
         }
